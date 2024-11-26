@@ -1,0 +1,277 @@
+﻿<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to SharePoint</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #005a9e;
+            }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" name="username" placeholder="Username" required />
+            <input type="password" id="password" name="password" placeholder="Password" required />
+            <button type="submit">Login</button>
+        </form>
+        <div id="error-message" class="error-message">Invalid credentials. Please try again.</div>
+    </div>
+
+    <script>
+        // Check registration status
+        function checkRegistration() {
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+            return storedUsername && storedPassword; // Return true if both username and password exist
+        }
+
+        // Redirect to registration page if not registered
+        window.onload = function () {
+            if (!checkRegistration()) {
+                alert("You are not registered. Redirecting to registration page...");
+                window.location.href = "RegistrationPage.html"; // Change this to your registration page file path
+            }
+        };
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Get form values
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Get stored credentials
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+
+            // Validate credentials
+            if (username === storedUsername && password === storedPassword) {
+                // Login successful
+                localStorage.setItem('isAuthenticated', 'true');
+                alert("Login successful! Redirecting to SharePoint site...");
+                window.location.href = "<-https://gns11.sharepoint.com/sites/IntranetPractice/SitePages/CollabHome.aspx->"; // Change this to your SharePoint site URL
+            } else {
+                // Show error message
+                document.getElementById('error-message').style.display = 'block';
+            }
+        });
+    </script>
+
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Registration - SharePoint</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #005a9e;
+            }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .success-message {
+            color: green;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="loginContainer">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" name="username" placeholder="Username" required />
+            <input type="password" id="password" name="password" placeholder="Password" required />
+            <button type="submit">Login</button>
+        </form>
+        <div id="error-message" class="error-message">Invalid credentials. Please try again.</div>
+        <div class="switch-link">
+            <p>Don't have an account? <a href="javascript:void(0);" onclick="showRegistration()">Register here</a>.</p>
+        </div>
+    </div>
+
+    <div class="container" id="registrationContainer" style="display: none;">
+        <h2>Register</h2>
+        <form id="registrationForm">
+            <input type="text" id="regUsername" name="username" placeholder="Username" required />
+            <input type="password" id="regPassword" name="password" placeholder="Password" required />
+            <input type="email" id="regEmail" name="email" placeholder="Email" required />
+            <button type="submit">Register</button>
+        </form>
+        <div id="registration-message" class="success-message">Registration successful! Redirecting to login page...</div>
+        <div class="switch-link">
+            <p>Already have an account? <a href="javascript:void(0);" onclick="goToLogin()">Login here</a>.</p>
+        </div>
+    </div>
+
+    <script>
+        // Check if the user is already registered (stored in localStorage)
+        function checkRegistration() {
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+            return storedUsername && storedPassword; // Return true if both username and password exist
+        }
+
+        // Show registration form
+        function showRegistration() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('registrationContainer').style.display = 'block';
+        }
+
+        // Show login form
+        function goToLogin() {
+            document.getElementById('registrationContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+        }
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+
+            // Validate credentials
+            if (username === storedUsername && password === storedPassword) {
+                alert("Login successful! Redirecting to SharePoint site...");
+                window.location.href = "https://gns11.sharepoint.com/sites/IntranetPractice/SitePages/CollabHome.aspx"; // Redirect to SharePoint site
+            } else {
+                document.getElementById('error-message').style.display = 'block'; // Show error message
+            }
+        });
+
+        // Handle registration form submission
+        document.getElementById('registrationForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const email = document.getElementById('regEmail').value;
+
+            // Store user information in localStorage
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
+            localStorage.setItem('email', email);
+
+            // Show success message and redirect to login after a brief delay
+            document.getElementById('registration-message').style.display = 'block';
+            setTimeout(() => {
+                goToLogin(); // Switch to login form
+            }, 2000);
+        });
+
+        // Initially show the login form (if not registered)
+        window.onload = function () {
+            if (!checkRegistration()) {
+                showRegistration(); // If not registered, show the registration form
+            } else {
+                goToLogin(); // If registered, show the login form
+            }
+        };
+    </script>
+
+</body>
+</html>
